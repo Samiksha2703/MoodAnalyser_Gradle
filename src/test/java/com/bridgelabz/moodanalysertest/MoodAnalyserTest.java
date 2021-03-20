@@ -1,26 +1,41 @@
 package com.bridgelabz.moodanalysertest;
 
 import com.bridgelabz.moodanalyser.MoodAnalizer;
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+@RunWith(Parameterized.class)
 public class MoodAnalyserTest {
+    private final String inputMessage;
+    private final String expectedMood;
+    private MoodAnalizer moodAnalizer;
 
-    MoodAnalizer moodAnalizer = new MoodAnalizer();
+    public MoodAnalyserTest(String inputMessage, String expectedMood){
+        super();
+        this.inputMessage = inputMessage;
+        this.expectedMood = expectedMood;
+    }
+    
+    @Before
+    public void initialize(){
+        moodAnalizer = new MoodAnalizer();
+    }
 
-    @Test
-    public void moodAnalysis_WhenMessageCotainSAD_ShouldReturn_SAD() {
-
-        String mood = moodAnalizer.analyseMood("I am in Sad Mood");
-
-        Assertions.assertEquals("SAD", mood);
+    @Parameterized.Parameters
+            public static Collection<Object[]> input()
+    {
+        return Arrays.asList(new Object[][] {{"I am in Sad Mood", "SAD"}, {"", "HAPPY"}});
     }
 
     @Test
-    public void moodAnalysis_WhenMessageDoNotCotainSAD_ShouldReturn_HAPPY() {
-
-        String mood = moodAnalizer.analyseMood("I am in Any Mood");
-
-        Assertions.assertEquals("HAPPY", mood);
+    public void moodAnalysis_WhenGivenMessage_ShouldReturn_ExpectedMood() {
+        Assertions.assertEquals(expectedMood, moodAnalizer.analyseMood(inputMessage));
     }
 }
